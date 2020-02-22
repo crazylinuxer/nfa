@@ -1,4 +1,5 @@
-from typing import TextIO
+from typing import TextIO, Set
+from mapper import State
 
 
 class SimpleLineGenerator:
@@ -68,3 +69,29 @@ def lambdas_filter(file: TextIO):
             continue
         if started:
             yield line.split()
+
+
+class Parser:
+    def __init__(self, alphabet_filename: str, input_filename: str):
+        self.input_file = input_filename
+        self.alphabet_file = alphabet_filename
+
+    def _parse_transitions(self) -> Set[State]:
+        pass
+
+    def _parse_lambdas(self) -> Set[str]:
+        pass
+
+    def parse_states(self) -> Set[State]:
+        pass
+
+    def parse_alphabet(self) -> Set[str]:
+        parsed = set()
+        with open(self.alphabet_file) as file:
+            result = file.read().strip().replace(',', ' ').replace('.', ' ').strip().split()
+            for letter in result:
+                if len(letter) > 1:
+                    raise RuntimeError("Error while parsing alphabet: letter must be a single char")
+                if len(letter) == 1:
+                    parsed.add(letter)
+        return parsed
