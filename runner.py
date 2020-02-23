@@ -37,8 +37,8 @@ class Runner:
         if explain:
             states = list(current_states)
             states.sort()
-            print("Beginning with states: " + str().join(
-                (green(state) + ' ' if self.map[state].is_final else yellow(state) + ' ')for state in states))
+            print("Beginning with states: " + (str().join(
+                (green(state) + ' ' if self.map[state].is_final else yellow(state) + ' ') for state in states) or red("none")))
         for symbol in string_to_check:
             if symbol not in self.map.alphabet:
                 if explain:
@@ -46,19 +46,21 @@ class Runner:
                 return False
             next_states = self.map.step(current_states, symbol)
             if explain:
+                print("Detected symbol " + underline(blue(symbol)))
                 states = list(next_states)
                 states.sort()
-                print("Obtaining states: " + str().join(
-                    (green(state) + ' ' if self.map[state].is_final else yellow(state) + ' ')for state in states))
+                print("Obtaining states: " + (str().join(
+                    (green(state) + ' ' if self.map[state].is_final else yellow(state) + ' ') for state in states) or red("none")))
             current_states = next_states
-        found_final = False
-        for state in current_states:
+        result_states = list(current_states)
+        result_states.sort()
+        finals = ''
+        for state in result_states:
             if self.map[state].is_final:
-                found_final = True
-                break
+                finals += state + ' '
         if explain:
-            if found_final:
-                print("Ended with at least one final state")
+            if finals:
+                print("Ended with final states: " + green(finals.strip()))
             else:
                 print("Ended without any final state")
-        return found_final
+        return bool(finals)
