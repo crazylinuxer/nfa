@@ -35,8 +35,10 @@ class Runner:
     def __call__(self, string_to_check: str, explain: bool = False) -> bool:
         current_states: Set[str] = self.map.initial_states
         if explain:
+            states = list(current_states)
+            states.sort()
             print("Beginning with states: " + str().join(
-                (green(state) + ' ' if self.map[state].is_final else yellow(state) + ' ')for state in current_states))
+                (green(state) + ' ' if self.map[state].is_final else yellow(state) + ' ')for state in states))
         for symbol in string_to_check:
             if symbol not in self.map.alphabet:
                 if explain:
@@ -44,8 +46,10 @@ class Runner:
                 return False
             next_states = self.map.step(current_states, symbol)
             if explain:
+                states = list(next_states)
+                states.sort()
                 print("Obtaining states: " + str().join(
-                    (green(state) + ' ' if self.map[state].is_final else yellow(state) + ' ')for state in next_states))
+                    (green(state) + ' ' if self.map[state].is_final else yellow(state) + ' ')for state in states))
             current_states = next_states
         found_final = False
         for state in current_states:
