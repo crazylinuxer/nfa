@@ -1,4 +1,4 @@
-from typing import Dict, Set, List
+from typing import Dict, Set, FrozenSet, List
 
 
 class State:
@@ -72,7 +72,7 @@ class Map:
             self.all_lambdas(lambda_transition, result)
         return result
 
-    def step(self, current_states: Set[str], letter: str):
+    def step(self, current_states: Set[str] or FrozenSet[str], letter: str) -> Set[str]:
         temp_result = set()
         for state in current_states:
             temp_result.update(self[state].next_states(letter))
@@ -80,6 +80,19 @@ class Map:
         for state in temp_result:
             result.update(self.all_lambdas(state))
         return result
+
+    @property
+    def all_state_sets(self) -> Set[FrozenSet[str]]:
+        all_states = {frozenset(self.initial_states)}
+        while True:
+            new_states = set()
+            for state in all_states:
+                for letter in self._alphabet:
+                    new_states.add(frozenset(self.step(state, letter)))
+            if all_states.issuperset(new_states):
+                break
+            all_states.update(new_states)
+        return all_states
 
     @property
     def initial_states(self) -> Set[str]:
