@@ -40,9 +40,9 @@ class State:
 
 
 class Map:
-    def __init__(self, alphabet: Set[str], data: List[State] = None):
+    def __init__(self, alphabet: Set[str], data: Dict[str, State] = None):
         self._alphabet = alphabet
-        self._data = {item.name: item for item in data} if data and alphabet else dict()
+        self._data = data if data and alphabet else dict()
         self.check_integrity()
 
     def __getitem__(self, item: str) -> State:
@@ -72,14 +72,34 @@ class Map:
             self.all_lambdas(lambda_transition, result)
         return result
 
-    def step(self, current_states: Set[str]):
-        pass
+    def step(self, current_states: Set[str], letter: str):
+        temp_result = set()
+        for state in current_states:
+            temp_result.update(self[state].next_states(letter))
+        result = temp_result.copy()
+        for state in temp_result:
+            result.update(self.all_lambdas(state))
+        return result
 
     @property
-    def initial_state(self) -> Set[str]:
+    def initial_states(self) -> Set[str]:
         return self.all_lambdas(
             self["q0"].name if self["q0"] else self[min(self._data.keys())].name
         )
 
     def check_integrity(self) -> None:
-        pass
+        end = False
+        for state in self._data:
+            if self._data[state].name != state:
+                raise KeyError("Keys in map don't match with state names")
+            if not self._data[state].used_alphabet.issubset(self._alphabet):
+                raise KeyError("State " + self._data[state].name + " does not match an alphabet")
+            for letter in self._alphabet:
+                for next_state in self._data[state].next_states(letter):
+                    if self[next_state] is None:
+                        raise KeyError("Error in state " + self._data[state].name + ": state " +
+                                       next_state + " not found in the map")
+            if self._data[state].is_final:
+                end = True
+        if not end:
+            raise RuntimeError("Cannot define NFA without any final state")

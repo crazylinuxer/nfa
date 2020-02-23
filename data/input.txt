@@ -1,14 +1,15 @@
-#This file contains configuration for NFA
-#"TRANSITIONS" section must be declared only once
-#"LAMBDAS" section can be declared any number of times (all of them will be parsed)
-#Also "LAMBDAS" section may not be declared at all
+# This file contains configuration for NFA
+# "TRANSITIONS" section must be declared only once
+# Each state must be declared once in "TRANSITIONS" section
+# "LAMBDAS" section can be declared any number of times (all of them will be parsed)
+# Also "LAMBDAS" section may not be declared at all
 
 TRANSITIONS
-#In this section must be defined usual transitions
-#Will always start from q0 state (or first by alphabet)
-#Alphabet must be described in "alphabet" order!
-#Write "null" (without quotation) to mark non-existent transition for letter
-#Enclose states in "{}" (without quotation) to define multiple transitions for one letter
+# In this section must be defined usual transitions
+# Will always start from q0 state (or first by alphabet)
+# Alphabet must be described in "alphabet" order!
+# Write "null" (without quotation) to mark non-existent transition for letter
+# Enclose states in "{}" (without quotation) to define multiple transitions for one letter
 #state	isfin	a	b	etc…
 
 q0	0
@@ -20,7 +21,7 @@ q5	0	q6
 q6	1
 
 LAMBDAS
-#In this section must be defined lambda transitions
+# In this section must be defined lambda transitions
 #state	states…
 
 q0	q1 q4
