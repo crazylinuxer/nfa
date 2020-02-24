@@ -94,6 +94,49 @@ class Map:
             all_states.update(new_states)
         return all_states
 
+    def build_dfa_map(self) -> Dict[str, Dict[str, str]]:
+        result = dict()
+        all_sets = self.all_state_sets
+        initial = frozenset(self.initial_states)
+        for state in all_sets:
+            for letter in self.alphabet:
+                next_state = self.step(state, letter)
+                if not result.get(self.to_dfa_state_name(state, (frozenset(state) == initial))):
+                    result[self.to_dfa_state_name(state, (frozenset(state) == initial))] =\
+                        {letter: self.to_dfa_state_name(next_state, (frozenset(next_state) == initial))}
+                else:
+                    result[self.to_dfa_state_name(state, (frozenset(state) == initial))][letter] = \
+                        self.to_dfa_state_name(next_state, (frozenset(next_state) == initial))
+        return result
+
+    def write_dfa_to_file(self, filename: str) -> None:
+        result = str()
+        dfa_states = self.build_dfa_map()
+        for state in dfa_states.keys():
+            result += state + '    '
+            checker = False
+            for substate in state.strip('$').split('-'):
+                if self[substate].is_final:
+                    checker = True
+                    break
+            result += ('1' if checker else '0') + '    0    '
+            next_states = dfa_states[state]
+            letters = list(next_states.keys())
+            letters.sort()
+            for letter in letters:
+                result += next_states[letter] + '    '
+            result = result.rstrip('    ')
+            result += '\n'
+        with open(filename, "w") as file:
+            file.write(result)
+            file.close()
+
+    @staticmethod
+    def to_dfa_state_name(states: Set[str] or FrozenSet[str], initial=False) -> str:
+        states = list(states)
+        states.sort()
+        return ('$' if initial else '') + '-'.join(states)
+
     @property
     def initial_states(self) -> Set[str]:
         return self.all_lambdas(

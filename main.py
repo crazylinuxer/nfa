@@ -10,6 +10,18 @@ if __name__ == "__main__":
         exit()
     print(green("Done"))
 
+    print("Build the DFA for this NFA? [y/N]")
+    try:
+        response = input()
+        if response in ['y', 'Y', 'д', 'Д']:
+            runner.map.write_dfa_to_file("./dfa_input.txt")
+    except (EOFError, KeyboardInterrupt):
+        print()
+        exit()
+    except Exception as exc:
+        print(red(exc.args[0]))
+        exit()
+
     print("Would you like to see explanation of each automaton step? [Y/n]")
     try:
         response = input()
