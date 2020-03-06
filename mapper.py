@@ -116,10 +116,10 @@ class Map:
             result += state + '    '
             checker = False
             for substate in state.strip('$').split('-'):
-                if self[substate].is_final:
+                if self[substate] and self[substate].is_final:
                     checker = True
                     break
-            result += ('1' if checker else '0') + '    0    '
+            result += ('1' if checker else '0') + '    '
             next_states = dfa_states[state]
             letters = list(next_states.keys())
             letters.sort()

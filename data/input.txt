@@ -12,16 +12,32 @@ TRANSITIONS
 # Enclose states in "{}" (without quotation) to define multiple transitions for one letter
 #state	isfin	a	b	etc…
 
-q0	0
-q1	0	q2
-q2	0	null	q3
-q3	1	q3	q3
-q4	0	q4	{q4	q5}
-q5	0	q6
-q6	1
+$start	0
+101_1	0	101_1	{101_1	101_2}
+101_2	0	101_3
+101_3	0	null	101_4
+101_4	0
+010_1	0	{010_1	010_2}	010_1
+010_2	0	null	010_3
+010_3	0	010_4
+010_4	0
+end1.1	0	end1.1	{end1.1	end1.2}
+end1.2	0	end1.1	end1.3
+end1.3	0	null	end1.4
+end1.4	1
+end0.1	0	{end0.1	end0.2}	end0.1
+end0.2	0	end0.3	end0.1
+end0.3	0	end0.4
+end0.4	1
+connector0	0
+connector1	0
 
 LAMBDAS
 # In this section must be defined lambda transitions
 #state	states…
 
-q0	q1 q4
+$start	101_1 010_1
+101_4	connector1
+010_4	connector0
+connector0	end0.2 end1.1
+connector1	end0.1 end1.2
