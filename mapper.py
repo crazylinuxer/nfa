@@ -135,7 +135,7 @@ class Map:
     def to_dfa_state_name(states: Set[str] or FrozenSet[str], initial=False) -> str:
         states = list(states)
         states.sort()
-        return ('$' if initial else '') + '-'.join(states)
+        return ('$' if initial else '') + '-'.join(states) if states else "{error}"
 
     @property
     def initial_states(self) -> Set[str]:
