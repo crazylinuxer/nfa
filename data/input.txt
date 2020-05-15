@@ -24,11 +24,11 @@ $start	0
 end1.1	0	end1.1	{end1.1	end1.2}
 end1.2	0	end1.1	end1.3
 end1.3	0	null	end1.4
-end1.4	1
+end1.4	1	null	end1.4
 end0.1	0	{end0.1	end0.2}	end0.1
 end0.2	0	end0.3	end0.1
 end0.3	0	end0.4
-end0.4	1
+end0.4	1	end0.4
 connector0	0
 connector1	0
 
